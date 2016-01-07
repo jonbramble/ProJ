@@ -48,16 +48,21 @@ func_ode_4 <- function(params,tt){
   parameters <- c(k1=params$k1, k2=params$k2, k3=params$k3)
   state <- c(A=1,B=0,C=0,D=0)
   out <- ode(y = state, times = tt, func = ABCD_First_Order, parms = parameters)
-  fout <- rowSums(out[,3:5])
-  return(fout[1:length(tt)])
+  #fout <- rowSums(out[,3:5])
+  #return(fout[1:length(tt)])
+  return(out[,3:5])
 }
 
 
 t <- seq(0, 50, by = 0.1)
 
 ## values over which to simulate data
-pp = list(k1=0.8,k2=-0.1)
-simDNoisy <- func_ode_3(pp,t) + rnorm(length(t),sd=.01)
+pp = list(k1=0.99,k2=0.317,k3=0.08)
+simDNoisy <- func_ode_4(pp,t) #+ rnorm(length(t),sd=.01)
+dat <- data.frame(simDNoisy)
+
+plot(x=t,dat$D)
+
 
 ## residual function
 residFun <- function(p, observed, tt) {
